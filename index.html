@@ -2,43 +2,86 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IMPORTANTE</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#05030f">
+    <title>Apenas comece</title>
     <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
     <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png">
     <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-    <div class="container">
-
-        <div class="header-box">
-            <div class="header-title">
-                <img src="assets/logo.png" alt="Logo" class="logo">
+    <canvas id="fundo" aria-hidden="true"></canvas>
+    <div class="pagina">
+        <header class="topo">
+            <div class="marca">
+                <img src="assets/logo.png" alt="" class="logo" width="64" height="64">
                 <div>
                     <h1>Apenas comece</h1>
-                    <p>Seu painel pessoal de tarefas e lembretes</p>
+                    <p id="resumo" class="resumo" role="status"></p>
                 </div>
             </div>
-
-            <div class="header-actions">
-                <button type="button" id="btn-toggle-concluidos" class="btn btn-secondary">
-                    Mostrar Concluídos
+            <div class="acoes">
+                <button type="button" id="btn-toggle-concluidos" class="chave" role="switch" aria-checked="false">
+                    <span class="chave-trilho" aria-hidden="true"></span>
+                    Ver concluídos
                 </button>
-
-                <form id="form-criar-topico" class="form-inline" style="gap: 8px;">
-                    <input type="text" id="input-nome-topico" placeholder="Novo Tópico..." required style="width: 160px;">
-                    <input type="date" id="input-data-inicio" title="Data de início (padrão: hoje)">
-                    <input type="date" id="input-data-limite" title="Data de término (opcional)">
-                    <button type="submit">➕ Criar</button>
-                </form>
+                <button type="button" id="btn-nova-categoria" class="btn btn-primario">Nova categoria</button>
             </div>
+        </header>
+
+        <main id="grid-topicos" class="categorias"></main>
+
+        <footer id="rodape" class="rodape">
+            <p>Suas tarefas ficam só neste navegador. Exporte um backup de vez em quando.</p>
+            <div class="rodape-acoes">
+                <button type="button" id="btn-exportar" class="btn-texto">Exportar backup</button>
+                <button type="button" id="btn-importar" class="btn-texto">Importar backup</button>
+                <input type="file" id="input-backup" accept="application/json,.json" hidden>
+            </div>
+        </footer>
+    </div>
+
+    <dialog id="dlg-categoria" class="janela" aria-labelledby="dlg-categoria-titulo">
+        <form id="form-categoria" novalidate>
+            <div class="janela-topo">
+                <button type="button" id="btn-cancelar-categoria" class="btn-texto">Cancelar</button>
+                <h2 id="dlg-categoria-titulo" tabindex="-1" autofocus>Nova categoria</h2>
+                <button type="submit" class="btn-texto forte">Salvar</button>
+            </div>
+            <div class="janela-corpo">
+                <div class="grupo">
+                    <label for="input-nome-topico"><span>Nome</span>
+                        <input type="text" id="input-nome-topico" maxlength="60" autocomplete="off" placeholder="Ex.: Comprar">
+                    </label>
+                </div>
+                <p id="erro-categoria" class="erro" role="alert" hidden></p>
+                <button type="button" id="btn-organizar" class="btn so-celular" hidden>Mudar a ordem das categorias</button>
+                <button type="button" id="btn-excluir-categoria" class="btn btn-perigo" hidden>Excluir</button>
+            </div>
+        </form>
+    </dialog>
+
+    <dialog id="dlg-confirmar" class="janela" aria-labelledby="dlg-confirmar-titulo">
+        <h2 id="dlg-confirmar-titulo">Importar este backup?</h2>
+        <p id="dlg-confirmar-texto" class="janela-texto"></p>
+        <div class="janela-acoes">
+            <button type="button" id="btn-confirmar-nao" class="btn">Cancelar</button>
+            <button type="button" id="btn-confirmar-sim" class="btn btn-primario">Importar</button>
         </div>
+    </dialog>
 
-        <div class="grid-container" id="grid-topicos"></div>
+    <div id="barra-organizar" class="barra-organizar" hidden>
+        <span>Arraste para mudar a ordem</span>
+        <button type="button" id="btn-fim-organizar" class="btn btn-primario">Concluir</button>
+    </div>
 
+    <div id="aviso" class="aviso" role="status" hidden>
+        <span id="aviso-texto"></span>
+        <button type="button" id="aviso-desfazer" class="btn-texto" hidden>Desfazer</button>
     </div>
 
     <script src="script.js"></script>
